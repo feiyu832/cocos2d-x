@@ -14,12 +14,12 @@ AppDelegate::~AppDelegate()
 
 bool AppDelegate::applicationDidFinishLaunching() {
     // initialize director
-    CCDirector *pDirector = CCDirector::sharedDirector();
+    Director *pDirector = Director::getInstance();
     
-    pDirector->setOpenGLView(CCEGLView::sharedOpenGLView());
+    pDirector->setOpenGLView(EGLView::getInstance());
     
-    CCSize screenSize = CCEGLView::sharedOpenGLView()->getFrameSize();
-    CCSize designSize = CCSizeMake(480, 320);
+    Size screenSize = EGLView::getInstance()->getFrameSize();
+    Size designSize = Size(480, 320);
     std::vector<std::string> searchPaths;
     
     if (screenSize.height > 320)
@@ -34,9 +34,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
         pDirector->setContentScaleFactor(320.0f/designSize.height);
     }
     
-    CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);
+    FileUtils::getInstance()->setSearchPaths(searchPaths);
     
-    CCEGLView::sharedOpenGLView()->setDesignResolutionSize(designSize.width, designSize.height, kResolutionNoBorder);
+    EGLView::getInstance()->setDesignResolutionSize(designSize.width, designSize.height, kResolutionNoBorder);
 
     // turn on display FPS
     pDirector->setDisplayStats(true);
@@ -45,7 +45,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     pDirector->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-    CCScene *pScene = HelloWorld::scene();
+    Scene *pScene = HelloWorld::scene();
 
     // run
     pDirector->runWithScene(pScene);
@@ -55,7 +55,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too
 void AppDelegate::applicationDidEnterBackground() {
-    CCDirector::sharedDirector()->stopAnimation();
+    Director::getInstance()->stopAnimation();
 
     // if you use SimpleAudioEngine, it must be pause
     // CocosDenshion::SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
@@ -63,7 +63,7 @@ void AppDelegate::applicationDidEnterBackground() {
 
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground() {
-    CCDirector::sharedDirector()->startAnimation();
+    Director::getInstance()->startAnimation();
 
     // if you use SimpleAudioEngine, it must resume here
     // CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();

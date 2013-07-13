@@ -29,18 +29,18 @@ THE SOFTWARE.
 
 /**
  @file
- CCPoint extensions based on Chipmunk's cpVect file.
- These extensions work both with CCPoint and cpVect.
+ Point extensions based on Chipmunk's cpVect file.
+ These extensions work both with Point and cpVect.
  
  The "ccp" prefix means: "CoCos2d Point"
  
  Examples:
-  - ccpAdd( ccp(1,1), ccp(2,2) ); // preferred cocos2d way
-  - ccpAdd( CCPointMake(1,1), CCPointMake(2,2) ); // also ok but more verbose
+  - ccpAdd( Point(1,1), Point(2,2) ); // preferred cocos2d way
+  - ccpAdd( Point(1,1), Point(2,2) ); // also ok but more verbose
   
   - cpvadd( cpv(1,1), cpv(2,2) ); // way of the chipmunk
   - ccpAdd( cpv(1,1), cpv(2,2) ); // mixing chipmunk and cocos2d (avoid)
-  - cpvadd( CCPointMake(1,1), CCPointMake(2,2) ); // mixing chipmunk and CG (avoid)
+  - cpvadd( Point(1,1), Point(2,2) ); // mixing chipmunk and CG (avoid)
  */
 
 #include "cocoa/CCGeometry.h"
@@ -53,68 +53,76 @@ NS_CC_BEGIN
  * @{
  */
 
-/** Helper macro that creates a CCPoint
- @return CCPoint
+/** Helper macro that creates a Point
+ @return Point
  @since v0.7.2
  */
-#define ccp(__X__,__Y__) cocos2d::CCPointMake((float)(__X__), (float)(__Y__))
+CC_DEPRECATED_ATTRIBUTE inline Point ccp(float x, float y)
+{
+    return Point(x, y);
+}
 
 /** Returns opposite of point.
- @return CCPoint
+ @return Point
  @since v0.7.2
+ @deprecated please use Point::-, for example: -v1
  */
-static inline CCPoint
-ccpNeg(const CCPoint& v)
+static inline CC_DEPRECATED_ATTRIBUTE Point
+ccpNeg(const Point& v)
 {
     return -v;
 }
 
 /** Calculates sum of two points.
- @return CCPoint
+ @return Point
  @since v0.7.2
+ @deprecated please use Point::+, for example: v1 + v2
  */
-static inline CCPoint
-ccpAdd(const CCPoint& v1, const CCPoint& v2)
+static inline CC_DEPRECATED_ATTRIBUTE Point
+ccpAdd(const Point& v1, const Point& v2)
 {
     return v1 + v2;
 }
 
 /** Calculates difference of two points.
- @return CCPoint
+ @return Point
  @since v0.7.2
+ @deprecated please use Point::-, for example: v1 - v2
  */
-static inline CCPoint
-ccpSub(const CCPoint& v1, const CCPoint& v2)
+static inline CC_DEPRECATED_ATTRIBUTE Point
+ccpSub(const Point& v1, const Point& v2)
 {
     return v1 - v2;
 }
 
 /** Returns point multiplied by given factor.
- @return CCPoint
+ @return Point
  @since v0.7.2
+ @deprecated please use Point::*, for example: v1 * v2
  */
-static inline CCPoint
-ccpMult(const CCPoint& v, const float s)
+static inline CC_DEPRECATED_ATTRIBUTE Point
+ccpMult(const Point& v, const float s)
 {
     return v * s;
 }
 
 /** Calculates midpoint between two points.
- @return CCPoint
+ @return Point
  @since v0.7.2
+ @deprecated please use it like (v1 + v2) / 2.0f
  */
-static inline CCPoint
-ccpMidpoint(const CCPoint& v1, const CCPoint& v2)
+static inline CC_DEPRECATED_ATTRIBUTE Point
+ccpMidpoint(const Point& v1, const Point& v2)
 {
-    return (v1 + v2) / 2.f;
+    return v1.getMidpoint(v2);
 }
 
 /** Calculates dot product of two points.
  @return float
  @since v0.7.2
  */
-static inline float
-ccpDot(const CCPoint& v1, const CCPoint& v2)
+static inline CC_DEPRECATED_ATTRIBUTE float
+ccpDot(const Point& v1, const Point& v2)
 {
     return v1.dot(v2);
 }
@@ -123,68 +131,68 @@ ccpDot(const CCPoint& v1, const CCPoint& v2)
  @return float
  @since v0.7.2
  */
-static inline float
-ccpCross(const CCPoint& v1, const CCPoint& v2)
+static inline CC_DEPRECATED_ATTRIBUTE float
+ccpCross(const Point& v1, const Point& v2)
 {
     return v1.cross(v2);
 }
 
 /** Calculates perpendicular of v, rotated 90 degrees counter-clockwise -- cross(v, perp(v)) >= 0
- @return CCPoint
+ @return Point
  @since v0.7.2
  */
-static inline CCPoint
-ccpPerp(const CCPoint& v)
+static inline CC_DEPRECATED_ATTRIBUTE Point
+ccpPerp(const Point& v)
 {
     return v.getPerp();
 }
 
 /** Calculates perpendicular of v, rotated 90 degrees clockwise -- cross(v, rperp(v)) <= 0
- @return CCPoint
+ @return Point
  @since v0.7.2
  */
-static inline CCPoint
-ccpRPerp(const CCPoint& v)
+static inline CC_DEPRECATED_ATTRIBUTE Point
+ccpRPerp(const Point& v)
 {
     return v.getRPerp();
 }
 
 /** Calculates the projection of v1 over v2.
- @return CCPoint
+ @return Point
  @since v0.7.2
  */
-static inline CCPoint
-ccpProject(const CCPoint& v1, const CCPoint& v2)
+static inline CC_DEPRECATED_ATTRIBUTE Point
+ccpProject(const Point& v1, const Point& v2)
 {
     return v1.project(v2);
 }
 
 /** Rotates two points.
- @return CCPoint
+ @return Point
  @since v0.7.2
  */
-static inline CCPoint
-ccpRotate(const CCPoint& v1, const CCPoint& v2)
+static inline CC_DEPRECATED_ATTRIBUTE Point
+ccpRotate(const Point& v1, const Point& v2)
 {
     return v1.rotate(v2);
 }
 
 /** Unrotates two points.
- @return CCPoint
+ @return Point
  @since v0.7.2
  */
-static inline CCPoint
-ccpUnrotate(const CCPoint& v1, const CCPoint& v2)
+static inline CC_DEPRECATED_ATTRIBUTE Point
+ccpUnrotate(const Point& v1, const Point& v2)
 {
     return v1.unrotate(v2);
 }
 
-/** Calculates the square length of a CCPoint (not calling sqrt() )
+/** Calculates the square length of a Point (not calling sqrt() )
  @return float
  @since v0.7.2
  */
-static inline float
-ccpLengthSQ(const CCPoint& v)
+static inline CC_DEPRECATED_ATTRIBUTE float
+ccpLengthSQ(const Point& v)
 {
     return v.getLengthSq();
 }
@@ -194,8 +202,8 @@ ccpLengthSQ(const CCPoint& v)
  @return float
  @since v1.1
 */
-static inline float
-ccpDistanceSQ(const CCPoint p1, const CCPoint p2)
+static inline CC_DEPRECATED_ATTRIBUTE float
+ccpDistanceSQ(const Point p1, const Point p2)
 {
     return (p1 - p2).getLengthSq();
 }
@@ -205,47 +213,42 @@ ccpDistanceSQ(const CCPoint p1, const CCPoint p2)
  @return float
  @since v0.7.2
  */
-float CC_DLL ccpLength(const CCPoint& v);
+CC_DEPRECATED_ATTRIBUTE float CC_DLL ccpLength(const Point& v);
 
 /** Calculates the distance between two points
  @return float
  @since v0.7.2
  */
-float CC_DLL ccpDistance(const CCPoint& v1, const CCPoint& v2);
+CC_DEPRECATED_ATTRIBUTE float CC_DLL ccpDistance(const Point& v1, const Point& v2);
 
 /** Returns point multiplied to a length of 1.
- @return CCPoint
+ @return Point
  @since v0.7.2
  */
-CCPoint CC_DLL ccpNormalize(const CCPoint& v);
+CC_DEPRECATED_ATTRIBUTE Point CC_DLL ccpNormalize(const Point& v);
 
 /** Converts radians to a normalized vector.
- @return CCPoint
+ @return Point
  @since v0.7.2
  */
-CCPoint CC_DLL ccpForAngle(const float a);
+CC_DEPRECATED_ATTRIBUTE Point CC_DLL ccpForAngle(const float a);
 
 /** Converts a vector to radians.
  @return float
  @since v0.7.2
  */
-float CC_DLL ccpToAngle(const CCPoint& v);
+CC_DEPRECATED_ATTRIBUTE float CC_DLL ccpToAngle(const Point& v);
 
-
-/** Clamp a value between from and to.
- @since v0.99.1
- */
-float CC_DLL clampf(float value, float min_inclusive, float max_inclusive);
 
 /** Clamp a point between from and to.
  @since v0.99.1
  */
-CCPoint CC_DLL ccpClamp(const CCPoint& p, const CCPoint& from, const CCPoint& to);
+CC_DEPRECATED_ATTRIBUTE Point CC_DLL ccpClamp(const Point& p, const Point& from, const Point& to);
 
-/** Quickly convert CCSize to a CCPoint
+/** Quickly convert Size to a Point
  @since v0.99.1
  */
-CCPoint CC_DLL ccpFromSize(const CCSize& s);
+CC_DEPRECATED_ATTRIBUTE Point CC_DLL ccpFromSize(const Size& s);
 
 /** Run a math operation function on each point component
  * absf, fllorf, ceilf, roundf
@@ -254,7 +257,7 @@ CCPoint CC_DLL ccpFromSize(const CCSize& s);
  * ccpCompOp(p,floorf);
  @since v0.99.1
  */
-CCPoint CC_DLL ccpCompOp(const CCPoint& p, float (*opFunc)(float));
+CC_DEPRECATED_ATTRIBUTE Point CC_DLL ccpCompOp(const Point& p, float (*opFunc)(float));
 
 /** Linear Interpolation between two points a and b
  @returns
@@ -263,30 +266,30 @@ CCPoint CC_DLL ccpCompOp(const CCPoint& p, float (*opFunc)(float));
     otherwise a value between a..b
  @since v0.99.1
  */
-CCPoint CC_DLL ccpLerp(const CCPoint& a, const CCPoint& b, float alpha);
+CC_DEPRECATED_ATTRIBUTE Point CC_DLL ccpLerp(const Point& a, const Point& b, float alpha);
 
 
 /** @returns if points have fuzzy equality which means equal with some degree of variance.
  @since v0.99.1
  */
-bool CC_DLL ccpFuzzyEqual(const CCPoint& a, const CCPoint& b, float variance);
+CC_DEPRECATED_ATTRIBUTE bool CC_DLL ccpFuzzyEqual(const Point& a, const Point& b, float variance);
 
 
 /** Multiplies a and b components, a.x*b.x, a.y*b.y
  @returns a component-wise multiplication
  @since v0.99.1
  */
-CCPoint CC_DLL ccpCompMult(const CCPoint& a, const CCPoint& b);
+CC_DEPRECATED_ATTRIBUTE Point CC_DLL ccpCompMult(const Point& a, const Point& b);
 
 /** @returns the signed angle in radians between two vector directions
  @since v0.99.1
  */
-float CC_DLL ccpAngleSigned(const CCPoint& a, const CCPoint& b);
+CC_DEPRECATED_ATTRIBUTE float CC_DLL ccpAngleSigned(const Point& a, const Point& b);
 
 /** @returns the angle in radians between two vector directions
  @since v0.99.1
 */
-float CC_DLL ccpAngle(const CCPoint& a, const CCPoint& b);
+CC_DEPRECATED_ATTRIBUTE float CC_DLL ccpAngle(const Point& a, const Point& b);
 
 /** Rotates a point counter clockwise by the angle around a pivot
  @param v is the point to rotate
@@ -295,7 +298,7 @@ float CC_DLL ccpAngle(const CCPoint& a, const CCPoint& b);
  @returns the rotated point
  @since v0.99.1
  */
-CCPoint CC_DLL ccpRotateByAngle(const CCPoint& v, const CCPoint& pivot, float angle);
+CC_DEPRECATED_ATTRIBUTE Point CC_DLL ccpRotateByAngle(const Point& v, const Point& pivot, float angle);
 
 /** A general line-line intersection test
  @param p1 
@@ -318,21 +321,21 @@ CCPoint CC_DLL ccpRotateByAngle(const CCPoint& v, const CCPoint& pivot, float an
     the hit point also is    p1 + s * (p2 - p1);
  @since v0.99.1
  */
-bool CC_DLL ccpLineIntersect(const CCPoint& p1, const CCPoint& p2, 
-                      const CCPoint& p3, const CCPoint& p4,
+CC_DEPRECATED_ATTRIBUTE bool CC_DLL ccpLineIntersect(const Point& p1, const Point& p2, 
+                      const Point& p3, const Point& p4,
                       float *s, float *t);
 
 /*
 ccpSegmentIntersect returns YES if Segment A-B intersects with segment C-D
 @since v1.0.0
 */
-bool CC_DLL ccpSegmentIntersect(const CCPoint& A, const CCPoint& B, const CCPoint& C, const CCPoint& D);
+CC_DEPRECATED_ATTRIBUTE bool CC_DLL ccpSegmentIntersect(const Point& A, const Point& B, const Point& C, const Point& D);
 
 /*
 ccpIntersectPoint returns the intersection point of line A-B, C-D
 @since v1.0.0
 */
-CCPoint CC_DLL ccpIntersectPoint(const CCPoint& A, const CCPoint& B, const CCPoint& C, const CCPoint& D);
+CC_DEPRECATED_ATTRIBUTE Point CC_DLL ccpIntersectPoint(const Point& A, const Point& B, const Point& C, const Point& D);
 
 // end of data_structures group
 /// @}
