@@ -25,11 +25,11 @@ static int SendBinaryMessageToLua(int nHandler,const unsigned char* pTable,int n
         return 0;
     }
     
-    if (NULL == CCScriptEngineManager::sharedManager()->getScriptEngine()) {
+    if (NULL == ScriptEngineManager::sharedManager()->getScriptEngine()) {
         return 0;
     }
     
-    CCLuaStack *pStack = CCLuaEngine::defaultEngine()->getLuaStack();
+    LuaStack *pStack = LuaEngine::defaultEngine()->getLuaStack();
     if (NULL == pStack) {
         return 0;
     }
@@ -40,13 +40,13 @@ static int SendBinaryMessageToLua(int nHandler,const unsigned char* pTable,int n
     }
     
     int nRet = 0;
-    CCLuaValueArray array;
+    LuaValueArray array;
     for (int i = 0 ; i < nLength; i++) {
-        CCLuaValue value = CCLuaValue::intValue(pTable[i]);
+        LuaValue value = LuaValue::intValue(pTable[i]);
         array.push_back(value);
     }
     
-    pStack->pushCCLuaValueArray(array);
+    pStack->pushLuaValueArray(array);
     nRet = pStack->executeFunctionByHandler(nHandler, 1);
     pStack->clean();
     return nRet;
@@ -78,18 +78,18 @@ public:
     void registerScriptHandler(int nFunID,WebSocketScriptHandlerType scriptHandlerType)
     {
         this->unregisterScriptHandler(scriptHandlerType);
-        m_mapScriptHandler[scriptHandlerType] = nFunID;
+        _mapScriptHandler[scriptHandlerType] = nFunID;
     }
     /**
      *  @brief Remove Handler of DelegateEvent
      */
     void unregisterScriptHandler(WebSocketScriptHandlerType scriptHandlerType)
     {
-        std::map<int,int>::iterator Iter = m_mapScriptHandler.find(scriptHandlerType);
+        std::map<int,int>::iterator Iter = _mapScriptHandler.find(scriptHandlerType);
         
-        if (m_mapScriptHandler.end() != Iter)
+        if (_mapScriptHandler.end() != Iter)
         {
-            m_mapScriptHandler.erase(Iter);
+            _mapScriptHandler.erase(Iter);
         }
     }
     /**
@@ -97,17 +97,17 @@ public:
      */
     int  getScriptHandler(WebSocketScriptHandlerType scriptHandlerType)
     {
-        std::map<int,int>::iterator Iter = m_mapScriptHandler.find(scriptHandlerType);
+        std::map<int,int>::iterator Iter = _mapScriptHandler.find(scriptHandlerType);
         
-        if (m_mapScriptHandler.end() != Iter)
+        if (_mapScriptHandler.end() != Iter)
             return Iter->second;
         
-        return -1;
+        return 0;
     }
     
     void InitScriptHandleMap()
     {
-        m_mapScriptHandler.clear();
+        _mapScriptHandler.clear();
     }
     
     virtual void onOpen(WebSocket* ws)
@@ -115,8 +115,10 @@ public:
         LuaWebSocket* luaWs = dynamic_cast<LuaWebSocket*>(ws);
         if (NULL != luaWs) {
             int nHandler = luaWs->getScriptHandler(LuaWebSocket::kWebSocketScriptHandlerOpen);
-            if (-1 != nHandler) {
-                CCScriptEngineManager::sharedManager()->getScriptEngine()->executeEvent(nHandler,"");
+            if (0 != nHandler) {
+                CommonScriptData data(nHandler,"");
+                ScriptEvent event(kCommonEvent,(void*)&data);
+                ScriptEngineManager::sharedManager()->getScriptEngine()->sendEvent(&event);
             }
         }
     }
@@ -127,15 +129,17 @@ public:
         if (NULL != luaWs) {
             if (data.isBinary) {
                 int nHandler = luaWs->getScriptHandler(LuaWebSocket::kWebSocketScriptHandlerMessage);
-                if (-1 != nHandler) {
+                if (0 != nHandler) {
                     SendBinaryMessageToLua(nHandler, (const unsigned char*)data.bytes, data.len);
                 }
             }
             else{
                 
                 int nHandler = luaWs->getScriptHandler(LuaWebSocket::kWebSocketScriptHandlerMessage);
-                if (-1 != nHandler) {
-                    CCScriptEngineManager::sharedManager()->getScriptEngine()->executeEvent(nHandler,data.bytes);
+                if (0 != nHandler) {
+                    CommonScriptData commonData(nHandler,data.bytes);
+                    ScriptEvent event(kCommonEvent,(void*)&commonData);
+                    ScriptEngineManager::sharedManager()->getScriptEngine()->sendEvent(&event);
                 }
             }
         }
@@ -146,8 +150,11 @@ public:
         LuaWebSocket* luaWs = dynamic_cast<LuaWebSocket*>(ws);
         if (NULL != luaWs) {
             int nHandler = luaWs->getScriptHandler(LuaWebSocket::kWebSocketScriptHandlerClose);
-            if (-1 != nHandler) {
-                CCScriptEngineManager::sharedManager()->getScriptEngine()->executeEvent(nHandler,"");
+            if (0 != nHandler)
+            {
+                CommonScriptData data(nHandler,"");
+                ScriptEvent event(kCommonEvent,(void*)&data);
+                ScriptEngineManager::sharedManager()->getScriptEngine()->sendEvent(&event);
             }
         }
     }
@@ -157,15 +164,18 @@ public:
         LuaWebSocket* luaWs = dynamic_cast<LuaWebSocket*>(ws);
         if (NULL != luaWs) {
             int nHandler = luaWs->getScriptHandler(LuaWebSocket::kWebSocketScriptHandlerError);
-            if (-1 != nHandler) {
-                CCScriptEngineManager::sharedManager()->getScriptEngine()->executeEvent(nHandler,"");
+            if (0 != nHandler)
+            {
+                CommonScriptData data(nHandler,"");
+                ScriptEvent event(kCommonEvent,(void*)&data);
+                ScriptEngineManager::sharedManager()->getScriptEngine()->sendEvent(&event);
             }
         }
     }
 
     
 private:
-    std::map<int,int> m_mapScriptHandler;
+    std::map<int,int> _mapScriptHandler;
 };
 
 #ifdef __cplusplus
@@ -263,13 +273,13 @@ static int tolua_Cocos2d_WebSocket_createByProtocolArray00(lua_State* tolua_S)
 #endif
     {
         const char *urlName  = ((const char*)  tolua_tostring(tolua_S,2,0));
-        CCArray*    protocolArray = ((CCArray*)  tolua_tousertype(tolua_S,3,0));
+        Array*    protocolArray = ((Array*)  tolua_tousertype(tolua_S,3,0));
         std::vector<std::string> protocols;
         if (NULL != protocolArray) {
-            CCObject* pObj = NULL;
+            Object* pObj = NULL;
             CCARRAY_FOREACH(protocolArray, pObj)
             {
-                CCString* pStr = (CCString*)pObj;
+                String* pStr = static_cast<String*>(pObj);
                 if (NULL != pStr) {
                     protocols.push_back(pStr->getCString());
                 }

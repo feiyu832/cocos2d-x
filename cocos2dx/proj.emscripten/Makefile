@@ -35,7 +35,6 @@ SOURCES = ../actions/CCAction.cpp \
 ../cocoa/CCNS.cpp \
 ../cocoa/CCObject.cpp \
 ../cocoa/CCSet.cpp \
-../cocoa/CCZone.cpp \
 ../cocoa/CCArray.cpp \
 ../cocoa/CCData.cpp \
 ../cocoa/CCDictionary.cpp \
@@ -77,6 +76,7 @@ SOURCES = ../actions/CCAction.cpp \
 ../platform/emscripten/CCImage.cpp \
 ../platform/emscripten/CCDevice.cpp \
 ../platform/emscripten/CCFileUtilsEmscripten.cpp \
+../platform/emscripten/CCTextureCacheEmscripten.cpp \
 ../script_support/CCScriptSupport.cpp \
 ../sprite_nodes/CCAnimation.cpp \
 ../sprite_nodes/CCAnimationCache.cpp \
@@ -108,6 +108,7 @@ SOURCES = ../actions/CCAction.cpp \
 ../textures/CCTextureCache.cpp \
 ../textures/CCTextureETC.cpp \
 ../textures/CCTexturePVR.cpp \
+../textures/etc/etc1.cpp\
 ../tilemap_parallax_nodes/CCParallaxNode.cpp \
 ../tilemap_parallax_nodes/CCTMXLayer.cpp \
 ../tilemap_parallax_nodes/CCTMXObjectGroup.cpp \

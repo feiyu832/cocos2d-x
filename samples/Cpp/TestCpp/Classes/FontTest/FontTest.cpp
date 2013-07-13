@@ -39,11 +39,11 @@ static std::string fontList[] =
 static int fontCount = sizeof(fontList) / sizeof(*fontList);
 
 static int vAlignIdx = 0;
-static CCVerticalTextAlignment verticalAlignment[] =
+static VerticalTextAlignment verticalAlignment[] =
 {
-    kCCVerticalTextAlignmentTop,
-    kCCVerticalTextAlignmentCenter,
-    kCCVerticalTextAlignmentBottom,
+    kVerticalTextAlignmentTop,
+    kVerticalTextAlignmentCenter,
+    kVerticalTextAlignmentBottom,
 };
 static int vAlignCount = sizeof(verticalAlignment) / sizeof(*verticalAlignment);
 
@@ -84,9 +84,9 @@ FontTest::FontTest()
 
 void FontTest::showFont(const char *pFont)
 {
-    CCSize s = CCDirector::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getWinSize();
 
-    CCSize blockSize = CCSizeMake(s.width/3, 200);
+    Size blockSize = Size(s.width/3, 200);
     float fontSize = 26;
 
     removeChildByTag(kTagLabel1, true);
@@ -97,37 +97,37 @@ void FontTest::showFont(const char *pFont)
     removeChildByTag(kTagColor2, true);
     removeChildByTag(kTagColor3, true);
 
-    CCLabelTTF *top = CCLabelTTF::create(pFont, pFont, 24);
-    CCLabelTTF *left = CCLabelTTF::create("alignment left", pFont, fontSize,
-                                          blockSize, kCCTextAlignmentLeft, verticalAlignment[vAlignIdx]);
-    CCLabelTTF *center = CCLabelTTF::create("alignment center", pFont, fontSize,
-                                            blockSize, kCCTextAlignmentCenter, verticalAlignment[vAlignIdx]);
-    CCLabelTTF *right = CCLabelTTF::create("alignment right", pFont, fontSize,
-                                           blockSize, kCCTextAlignmentRight, verticalAlignment[vAlignIdx]);
+    LabelTTF *top = LabelTTF::create(pFont, pFont, 24);
+    LabelTTF *left = LabelTTF::create("alignment left", pFont, fontSize,
+                                          blockSize, kTextAlignmentLeft, verticalAlignment[vAlignIdx]);
+    LabelTTF *center = LabelTTF::create("alignment center", pFont, fontSize,
+                                            blockSize, kTextAlignmentCenter, verticalAlignment[vAlignIdx]);
+    LabelTTF *right = LabelTTF::create("alignment right", pFont, fontSize,
+                                           blockSize, kTextAlignmentRight, verticalAlignment[vAlignIdx]);
 
-    CCLayerColor *leftColor = CCLayerColor::create(ccc4(100, 100, 100, 255), blockSize.width, blockSize.height);
-    CCLayerColor *centerColor = CCLayerColor::create(ccc4(200, 100, 100, 255), blockSize.width, blockSize.height);
-    CCLayerColor *rightColor = CCLayerColor::create(ccc4(100, 100, 200, 255), blockSize.width, blockSize.height);
+    LayerColor *leftColor = LayerColor::create(Color4B(100, 100, 100, 255), blockSize.width, blockSize.height);
+    LayerColor *centerColor = LayerColor::create(Color4B(200, 100, 100, 255), blockSize.width, blockSize.height);
+    LayerColor *rightColor = LayerColor::create(Color4B(100, 100, 200, 255), blockSize.width, blockSize.height);
 
     leftColor->ignoreAnchorPointForPosition(false);
     centerColor->ignoreAnchorPointForPosition(false);
     rightColor->ignoreAnchorPointForPosition(false);
 
 
-    top->setAnchorPoint(ccp(0.5, 1));
-    left->setAnchorPoint(ccp(0,0.5));
-    leftColor->setAnchorPoint(ccp(0,0.5));
-    center->setAnchorPoint(ccp(0,0.5));
-    centerColor->setAnchorPoint(ccp(0,0.5));
-    right->setAnchorPoint(ccp(0,0.5));
-    rightColor->setAnchorPoint(ccp(0,0.5));
+    top->setAnchorPoint(Point(0.5, 1));
+    left->setAnchorPoint(Point(0,0.5));
+    leftColor->setAnchorPoint(Point(0,0.5));
+    center->setAnchorPoint(Point(0,0.5));
+    centerColor->setAnchorPoint(Point(0,0.5));
+    right->setAnchorPoint(Point(0,0.5));
+    rightColor->setAnchorPoint(Point(0,0.5));
 
-    top->setPosition(ccp(s.width/2,s.height-20));
-    left->setPosition(ccp(0,s.height/2));
+    top->setPosition(Point(s.width/2,s.height-20));
+    left->setPosition(Point(0,s.height/2));
     leftColor->setPosition(left->getPosition());
-    center->setPosition(ccp(blockSize.width, s.height/2));
+    center->setPosition(Point(blockSize.width, s.height/2));
     centerColor->setPosition(center->getPosition());
-    right->setPosition(ccp(blockSize.width*2, s.height/2));
+    right->setPosition(Point(blockSize.width*2, s.height/2));
     rightColor->setPosition(right->getPosition());
 
     this->addChild(leftColor, -1, kTagColor1);
@@ -139,12 +139,12 @@ void FontTest::showFont(const char *pFont)
     this->addChild(top, 0, kTagLabel4);
 }
 
-void FontTest::backCallback(CCObject* pSender)
+void FontTest::backCallback(Object* pSender)
 {
     showFont(backAction());
 }
 
-void FontTest::nextCallback(CCObject* pSender)
+void FontTest::nextCallback(Object* pSender)
 {
     showFont(nextAction());
 }
@@ -154,7 +154,7 @@ std::string FontTest::title()
     return "Font test";
 }
 
-void FontTest::restartCallback(CCObject* pSender)
+void FontTest::restartCallback(Object* pSender)
 {
     showFont(restartAction());
 }
@@ -166,8 +166,8 @@ void FontTest::restartCallback(CCObject* pSender)
 ///---------------------------------------
 void FontTestScene::runThisTest()
 {
-    CCLayer* pLayer = FontTest::create();
+    Layer* pLayer = FontTest::create();
     addChild(pLayer);
 
-    CCDirector::sharedDirector()->replaceScene(this);
+    Director::getInstance()->replaceScene(this);
 }
